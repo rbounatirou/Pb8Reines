@@ -2,6 +2,7 @@
 {
     public class Individu
     {
+        private static readonly int TAILLE = 8;
         private int[] positionReines;
 
         public int[] PositionReines { get => positionReines; }
@@ -10,32 +11,31 @@
         {
             List<int> position = new();
             // PAR DEFAUT 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < TAILLE; i++)
             {
-                position.Add(Alea.GetNombreAleatoire(0, 7));
+                position.Add(Alea.GetNombreAleatoire(0, TAILLE-1));
             }
             positionReines = position.ToArray();
         }
 
         public Individu(int[] positions)
         {
-            if (positions.Length != 8)
-                throw new Exception("Erreur doit avoir une longueur de 8");
+            if (positions.Length != TAILLE)
+                throw new Exception("Erreur doit avoir une longueur de " + TAILLE);
             positionReines = positions;
         }
 
         public int Fitness()
         {
             int score = 0;
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < TAILLE; i++)
             {
-                if (CheckIfIndexIsOk(i))
-                    score++;
+                score += CalculateScoreForQueen(i);
             }
             return score;
         }
 
-        private bool CheckIfIndexIsOk(int index)
+        private int CalculateScoreForQueen(int index)
         {
             int positionBase = positionReines[index];
             int inLine = 0;
@@ -52,26 +52,26 @@
                     inDiag++;
                 }
             }
-            return inLine == 1 && inDiag == 1;
+            return 7 - ((inLine -1) + (inDiag-1));
             
         }
 
         public Individu CrossOver(Individu _indivuAvecLequelFaireReproduction)
         {
-            int curseur = Alea.GetNombreAleatoire(0, 6);
+            int curseur = Alea.GetNombreAleatoire(0, (TAILLE-2));
             bool poidsFort = Alea.GetNombreAleatoire(0, 1) == 0;
             List<int> positionEnfant = new();
-            Individu curentParentGene;
-            for (int i = 0; i < 8; i++)
+            Individu currentParentGene;
+            for (int i = 0; i < TAILLE; i++)
             {
                 if (i < curseur)
                 {
-                    curentParentGene = poidsFort ? this : _indivuAvecLequelFaireReproduction;
+                    currentParentGene = poidsFort ? this : _indivuAvecLequelFaireReproduction;
                 } else
                 {
-                    curentParentGene = poidsFort ? _indivuAvecLequelFaireReproduction : this;
+                    currentParentGene = poidsFort ? _indivuAvecLequelFaireReproduction : this;
                 }
-                positionEnfant.Add(curentParentGene.PositionReines[i]);
+                positionEnfant.Add(currentParentGene.PositionReines[i]);
                 
             }
             return new Individu(positionEnfant.ToArray());
@@ -80,12 +80,12 @@
         public void Mutate(int probabiliteEnPourcent)
         {
             int score;
-            for (int i =0; i < 8; i++)
+            for (int i =0; i < TAILLE; i++)
             {
                 score =  Alea.GetNombreAleatoire(1, 100);
                 if (score <= probabiliteEnPourcent)
                 {
-                    positionReines[i] = Alea.GetNombreAleatoire(0, 7);
+                    positionReines[i] = Alea.GetNombreAleatoire(0, TAILLE-1);
                 }
             }
         }
