@@ -33,6 +33,7 @@
             labelScore = new Label();
             labelProgres = new Label();
             labelTotalGen = new Label();
+            buttonExport = new Button();
             SuspendLayout();
             // 
             // panelDessin
@@ -80,11 +81,22 @@
             labelTotalGen.TabIndex = 4;
             labelTotalGen.Text = "0";
             // 
+            // buttonExport
+            // 
+            buttonExport.Location = new Point(418, 75);
+            buttonExport.Name = "buttonExport";
+            buttonExport.Size = new Size(215, 23);
+            buttonExport.TabIndex = 5;
+            buttonExport.Text = "Export to CSV";
+            buttonExport.UseVisualStyleBackColor = true;
+            buttonExport.Click += buttonExport_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(645, 450);
+            Controls.Add(buttonExport);
             Controls.Add(labelTotalGen);
             Controls.Add(labelProgres);
             Controls.Add(labelScore);
@@ -103,5 +115,6 @@
         private Label labelScore;
         private Label labelProgres;
         private Label labelTotalGen;
+        private Button buttonExport;
     }
 }

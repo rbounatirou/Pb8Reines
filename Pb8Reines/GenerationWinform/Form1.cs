@@ -63,8 +63,9 @@ namespace GenerationWinform
             indexGenerationObservee = -1;
             generationSansProgres = 0;
             Generation gen;
-            do {
-                
+            do
+            {
+
                 if (sesGeneration.Count() == 0)
                     gen = new Generation(10, 20);
                 else
@@ -82,16 +83,39 @@ namespace GenerationWinform
                     {
                         generationSansProgres = 0;
                     }
-                    
+
                 }
                 sesGeneration.Add(gen);
                 indexGenerationObservee++;
-               
+
             } while (sesGeneration.Last().SortByFitness()[0].Fitness() < 56 || generationSansProgres > 1000);
             panelDessin.Refresh();
             labelProgres.Text = generationSansProgres.ToString();
             labelTotalGen.Text = sesGeneration.Count().ToString();
             labelScore.Text = gen.Individus[0].Fitness().ToString();
+        }
+
+        private void buttonExport_Click(object sender, EventArgs e)
+        {
+
+            string str = "\"nbgen\";";
+            for (int i = 0; i < sesGeneration.Last().NbIndividu; i++)
+            {
+                str += "\"individu " + i + "\"" + (i +1 < sesGeneration.Last().NbIndividu ? ";" : "\n");
+            }
+            for (int n = 0; n < sesGeneration.Count(); n++)
+            {
+                sesGeneration[n].SortByFitness();
+                string tmp = "";
+                tmp += String.Format("\"{0}\";", n);
+                for (int i = 0; i < sesGeneration[n].Individus.Count(); i++)
+                {
+                    Individu tmpIndividu = sesGeneration[n].Individus[i];
+                    tmp += String.Format("\"{0}\"{1}", tmpIndividu.Fitness(), ((i+1) < sesGeneration[n].Individus.Count() ? ";" : "\n"));
+                }
+                str += tmp;
+            }
+            File.WriteAllText("result.csv", str);
         }
     }
 }
